@@ -63,5 +63,3 @@ El proyecto sigue una separación clara de responsabilidades:
 ## 🎨 Diseño Visual
 El proyecto utiliza una paleta de colores minimalista con tipografía *Inter*, enfocándose en resaltar las imágenes de los productos artesanales. La sección "Hero" utiliza el imagotipo de la marca para reforzar la identidad visual.
 
----
-Desarrollado con ❤️ por tu nombre.
