@@ -1,0 +1,89 @@
+// For information on how to create your own theme, please refer to:
+// https://ionicframework.com/docs/theming/
+
+/* Configuración para el modo oscuro manual (clase .dark) */
+/* Comentado temporalmente
+.dark {
+  --ion-background-color: #121212;
+  --ion-background-color-rgb: 18,18,18;
+
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255,255,255;
+
+  --ion-color-step-50: #1e1e1e;
+  --ion-color-step-100: #2a2a2a;
+  --ion-color-step-150: #363636;
+  --ion-color-step-200: #414141;
+  --ion-item-background: #1e1e1e;
+  --ion-card-background: #1e1e1e;
+
+  --ion-color-light: #2a2a2a; 
+  --ion-color-light-rgb: 42,42,42;
+  --ion-color-medium: #414141; 
+  --ion-color-medium-rgb: 65,65,65;
+  --ion-color-dark: #f4f5f8; 
+  --ion-color-dark-rgb: 244,245,248;
+
+  .brand span, .nav, .nav a, .hero h1, .hero .lead, .hero-stats div, .hero-stats strong, .hero-stats span,
+  .collection h2, .collection .subtitle, .product-body .price, .history h2, .history .lead, .history-card,
+  .preview-header h2, .preview-info .current, .preview-info .original, .preview-info .description,
+  .cart-title, .cart-container h2, .empty-cart p, .item-details h4, .item-details .price, .quantity label, .qty-input, .total-price, .summary-row, .summary-row.total {
+    color: var(--ion-text-color);
+  }
+  .hero, .history {
+    background: linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
+  }
+
+  .topbar {
+    --background: #1a1a1a;
+    border-bottom: 1px solid #333;
+  }
+}
+*/
+
+/* Colores base de la aplicación */
+:root {
+  --ion-color-primary: #3880ff;
+  --ion-color-primary-rgb: 56,128,255;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #3171e0;
+  --ion-color-primary-tint: #4c8dff;
+
+  /* Colores de Marca Artesanal */
+  --brand-accent: #7a4a27;
+  --brand-accent-contrast: #ffffff;
+}
+
+/* Color para el botón de menú lateral */
+ion-menu-button {
+  --color: var(--brand-accent);
+  transition: transform 0.1s ease-out;
+
+  &:active {
+    transform: scale(0.85);
+  }
+}
+
+/* Personalización del Menú Lateral */
+ion-menu {
+  --background: #f7f7f7; /* Gris muy tenue para diferenciarlo del blanco puro del fondo */
+  ion-toolbar, ion-content, ion-item {
+    --background: #f7f7f7;
+    --color: #000000;
+  }
+
+  /* Color para la opción del carrito en el menú */
+  .cart-menu-item {
+    ion-icon, ion-label {
+      color: var(--brand-accent);
+    }
+  }
+
+  /* Color para la opción de favoritos en el menú */
+  .favorites-menu-item {
+    ion-icon, ion-label {
+      color: var(--brand-accent);
+    }
+  }
+}

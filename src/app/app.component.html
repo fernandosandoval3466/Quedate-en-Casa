@@ -1,0 +1,39 @@
+<ion-app>
+  <ion-menu contentId="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Ajustes</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list>
+        <!-- Opción 1: Modo Oscuro -->
+        <!-- Comentado temporalmente
+        <ion-item>
+          <ion-icon slot="start" name="moon"></ion-icon>
+          <ion-label>Modo Oscuro</ion-label>
+          <ion-toggle [checked]="isDark" (ionChange)="initializeDarkPalette($event.detail.checked)" slot="end"></ion-toggle>
+        </ion-item>
+        -->
+
+        <!-- Opción 2: Carrito de compras -->
+        <ion-menu-toggle auto-hide="false">
+          <ion-item button routerLink="/cart" class="cart-menu-item">
+            <ion-icon slot="start" name="cart"></ion-icon>
+            <ion-label>Carrito de compras</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <!-- Opción 3: Mis Favoritos -->
+        <ion-menu-toggle auto-hide="false">
+          <ion-item button routerLink="/favorites" class="favorites-menu-item">
+            <ion-icon slot="start" name="heart"></ion-icon>
+            <ion-label>Mis Favoritos</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-app>

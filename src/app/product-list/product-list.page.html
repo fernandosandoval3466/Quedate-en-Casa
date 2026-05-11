@@ -1,0 +1,124 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="assets/icon/Logo.png" alt="logo" />
+        <span>Arte y Diseño</span>
+      </div>
+      <nav class="nav">
+        <a routerLink="/home">Inicio</a>
+        <a routerLink="/home#coleccion">Colección</a>
+        <a routerLink="/home#historia">Historia</a>
+        <a routerLink="/home#contacto">Contacto</a>
+      </nav>
+      <div class="actions">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-button fill="clear" size="small" routerLink="/cart" class="cart-btn">
+          <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="outline" size="small" class="login-btn" routerLink="/login">Iniciar sesión</ion-button>
+        <ion-button color="primary" size="small" class="register-btn" routerLink="/register">Registrarse</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="product-list-content">
+  <div class="container">
+    <!-- Back Button -->
+    <div class="back-btn-container">
+      <ion-button fill="clear" size="small" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Volver
+      </ion-button>
+    </div>
+
+    <!-- Header -->
+    <div class="catalog-header">
+      <h1>Catálogo de Productos</h1>
+      <p>Explora nuestra selección completa de creaciones artesanales</p>
+    </div>
+
+    <!-- Filters and Sort -->
+    <div class="filters-section">
+      <div class="filter-group">
+        <label for="category">Categoría:</label>
+        <select id="category" [(ngModel)]="selectedCategory" (change)="onCategoryChange()" class="filter-select">
+          <option value="all">Todas las categorías</option>
+          <option value="ceramica">Cerámica</option>
+          <option value="textiles">Textiles</option>
+          <option value="escultura">Escultura</option>
+          <option value="joyeria">Joyería</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="sort">Ordenar por:</label>
+        <select id="sort" [(ngModel)]="sortBy" (change)="onSortChange()" class="filter-select">
+          <option value="relevancia">Relevancia</option>
+          <option value="precio-menor">Precio: menor a mayor</option>
+          <option value="precio-mayor">Precio: mayor a menor</option>
+          <option value="rating">Mejor puntuado</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="products-grid">
+      <div class="product-card" *ngFor="let product of filteredProducts" [routerLink]="['/product', product.id]">
+        <div class="product-image">
+          <ion-img [src]="product.image" [alt]="product.name"></ion-img>
+          <div class="product-badge">-30%</div>
+        </div>
+        <div class="product-info">
+          <h3>{{ product.name }}</h3>
+          <div class="rating">
+            <span class="stars">⭐ {{ product.rating }}</span>
+          </div>
+          <div class="price">
+            <span class="current">{{ product.price | currency }}</span>
+            <span class="original">{{ product.originalPrice | currency }}</span>
+          </div>
+          <ion-button color="primary" expand="block" size="small" class="add-btn">
+            <ion-icon name="cart" slot="start"></ion-icon>
+            Comprar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredProducts.length === 0">
+      <ion-icon name="search-outline"></ion-icon>
+      <h3>No se encontraron productos</h3>
+      <p>Intenta cambiar los filtros</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <ion-footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <div class="brand">
+          <img src="assets/icon/Logo.png" alt="logo" />
+          <div>
+            <div class="brand-name">Arte y Diseño</div>
+            <div class="brand-desc">Creaciones artesanales desde 2008</div>
+          </div>
+        </div>
+        <div class="socials">© 2026 Arte y Diseño</div>
+      </div>
+      <div class="footer-col">
+        <h4>Enlaces</h4>
+        <a routerLink="/home">Inicio</a>
+        <a routerLink="/home#coleccion">Colección</a>
+        <a routerLink="/home#contacto">Contacto</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <div>correo@arteydiseno.com</div>
+        <div>+34 600 000 000</div>
+      </div>
+    </div>
+  </ion-footer>
+</ion-content>

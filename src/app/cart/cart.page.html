@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar class="topbar">
+    <div class="topbar-inner">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+      
+      <div class="brand">
+        <img src="assets/icon/Logo.png" alt="logo" />
+        <span>Arte y Diseño</span>
+      </div>
+
+      <ion-title class="cart-title">Mi Carrito</ion-title>
+
+      <div class="actions">
+        <ng-container *ngIf="!(authService.isAuthenticated$ | async)">
+          <ion-button fill="outline" size="small" routerLink="/login">Iniciar sesión</ion-button>
+          <ion-button color="dark" size="small" routerLink="/register">Registrarse</ion-button>
+        </ng-container>
+        <ng-container *ngIf="authService.isAuthenticated$ | async">
+          <ion-button color="danger" size="small" (click)="logout()">Cerrar sesión</ion-button>
+        </ng-container>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding cart-content">
+  <div *ngIf="(cartService.cart$ | async)?.length === 0" class="empty-cart">
+    <ion-icon name="cart-outline" size="large"></ion-icon>
+    <h3>Tu carrito está vacío</h3>
+    <p>¡Explora nuestra colección y encuentra algo único!</p>
+    <ion-button expand="block" color="dark" routerLink="/product-list">Ir a la tienda</ion-button>
+  </div>
+
+  <ion-list *ngIf="(cartService.cart$ | async) as items">
+    <ion-item-sliding *ngFor="let item of items">
+      <ion-item>
+        <ion-thumbnail slot="start">
+          <img [src]="item.image" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ item.name }}</h2>
+          <p>{{ item.price | number:'1.2-2' }} € / unidad</p>
+          <div class="quantity-controls">
+            <ion-button fill="clear" (click)="updateQuantity(item.id, item.quantity, -1)">
+              <ion-icon name="remove-outline"></ion-icon>
+            </ion-button>
+            <ion-note>{{ item.quantity }}</ion-note>
+            <ion-button fill="clear" (click)="updateQuantity(item.id, item.quantity, 1)">
+              <ion-icon name="add-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-label>
+        <ion-note slot="end" color="dark">
+          <strong>{{ (item.price * item.quantity) | number:'1.2-2' }} €</strong>
+        </ion-note>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="removeItem(item.id)">
+          <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
+
+<ion-footer *ngIf="(cartService.cartCount$ | async) || 0 > 0">
+  <ion-toolbar class="ion-padding-horizontal">
+    <ion-title size="small">Total: {{ cartService.cartTotal$ | async | number:'1.2-2' }} €</ion-title>
+    <ion-button slot="end" color="dark" (click)="checkout()">Finalizar Compra</ion-button>
+  </ion-toolbar>
+</ion-footer>

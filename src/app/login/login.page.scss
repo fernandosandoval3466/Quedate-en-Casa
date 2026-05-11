@@ -1,0 +1,143 @@
+/* Login page styles — match main window style */
+.login-page { font-family: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial; }
+
+.login-hero { background: linear-gradient(180deg,#fff0f4 0%, #f9eef4 100%); padding:28px 16px; text-align:center; color: #111;}
+.login-hero h2 { margin:8px 0; font-size:22px; }
+.login-hero .subtitle { color:#6b6b6b; font-size:13px; }
+
+.login-form { padding:28px 16px; max-width:800px; margin:0 auto; }
+
+/* Alerts */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.alert-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-success ion-icon {
+  color: #28a745;
+  font-size: 20px;
+}
+
+.alert-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.alert-error ion-icon {
+  color: #dc3545;
+  font-size: 20px;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-primary, #1f1f1f);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.form-group ion-input {
+  --background: var(--input-bg, #e8f5f0);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --color: var(--text-primary, #1f1f1f);
+  border-radius: 12px;
+}
+
+.form-group ion-input[disabled] {
+  --background: #f0f0f0;
+  opacity: 0.6;
+}
+
+/* Actions */
+.actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-primary {
+  --background: #f3d6a6;
+  color: #1f1f1f;
+  border-radius: 12px;
+  padding: 12px 32px;
+  width: 100%;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary:disabled {
+  --background: #e0e0e0;
+  opacity: 0.6;
+}
+
+/* Form footer */
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.form-footer p {
+  margin: 0;
+}
+
+.form-footer .link {
+  color: #f3d6a6;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.form-footer .link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width:680px) {
+  .login-form { padding:18px; }
+}
+
+/* Ensure header logo scales like main header */
+.topbar .brand img,
+.topbar img {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.topbar .brand { display:flex; align-items:center; gap:8px; }
+.topbar .brand span { font-weight:600; }
+
+/* Match main window background and input text color */
+.login-page {
+  --ion-background-color: #ffffff;
+}
+
+.login-page ion-input::part(native),
+.login-page ion-input input {
+  color: #111 !important;
+}
+
+.login-page ion-toolbar.topbar,
+.login-page .topbar {
+  background: transparent;
+}

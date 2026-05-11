@@ -1,0 +1,165 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="topbar">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="assets/icon/Logo.png" alt="logo" />
+        <span>Arte y Diseño</span>
+      </div>
+      <nav class="nav">
+        <a routerLink="/home">Inicio</a>
+        <a routerLink="/product-list">Colección</a>
+        <a [routerLink]="['/home']" fragment="historia">Historia</a>
+        <a [routerLink]="['/home']" fragment="contacto">Contacto</a>
+      </nav>
+      <div class="actions">
+        <div class="search-bar" style="max-width: 160px; height: 36px; font-size: 14px;">
+          <ion-icon name="search-outline"></ion-icon>
+          <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="filterProducts()" style="width: 100%; border: none; outline: none; background: transparent; padding-left: 5px;" />
+        </div>
+        <ion-button fill="clear" size="small" (click)="toggleDarkMode()" class="theme-btn" [title]="darkMode ? 'Modo claro' : 'Modo oscuro'">
+          <ion-icon [name]="darkMode ? 'sunny-outline' : 'moon-outline'" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" routerLink="/cart" class="cart-btn">
+          <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+          <ion-badge color="danger" *ngIf="cartCount > 0">{{ cartCount }}</ion-badge>
+        </ion-button>
+        <ng-container *ngIf="!(authService.isAuthenticated$ | async)">
+          <ion-button fill="outline" size="small" class="login-btn" routerLink="/login">Iniciar sesión</ion-button>
+          <ion-button color="dark" size="small" class="register-btn" routerLink="/register">Registrarse</ion-button>
+        </ng-container>
+        <ng-container *ngIf="authService.isAuthenticated$ | async">
+          <ion-button color="danger" size="small" (click)="logout()">Cerrar sesión</ion-button>
+        </ng-container>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  <section class="hero">
+    <div class="hero-inner">
+      <h1>Arte y Diseño</h1>
+      <p class="lead">Creaciones artesanales únicas hechas con pasión y tradición.</p>
+      <div class="hero-controls">
+        <ion-button color="dark" routerLink="/product/1">Comprar ahora</ion-button>
+        <ion-button fill="outline" [routerLink]="['/home']" fragment="coleccion">Ver colección</ion-button>
+      </div>
+      <div class="hero-stats">
+        <div><strong>500+</strong><span>Productos</span></div>
+        <div><strong>15+</strong><span>Años</span></div>
+        <div><strong>100%</strong><span>Hecho a mano</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card">
+        <ion-img src="assets/icon/Logo.png" alt="logo"></ion-img>
+      </div>
+    </div>
+  </section>
+
+  <section class="collection" id="coleccion">
+    <h2>Nuestra Colección</h2>
+    <p class="subtitle">Piezas seleccionadas de nuestra tienda</p>
+    <div class="products-grid">
+      <div class="product" *ngFor="let item of filteredProducts">
+        <div class="product-media">
+          <ion-img [src]="item.image"></ion-img>
+          <button class="like" (click)="toggleLike(item)">
+            <ion-icon [name]="item.liked ? 'heart' : 'heart-outline'"></ion-icon>
+          </button>
+        </div>
+        <div class="product-body">
+          <div class="title">{{ item.name }}</div>
+          <div class="price">${{ item.price | number: '1.2-2' }}</div>
+          <div class="actions">
+            <ion-button fill="outline" size="small" (click)="openPreview(item.id)">Ver</ion-button>
+            <ion-button color="dark" size="small" (click)="addToCart(item)">Comprar</ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="see-more centered">
+      <ion-button class="black" color="dark" routerLink="/product-list">Ver más</ion-button>
+    </div>
+  </section>
+
+  <section class="history" id="historia">
+    <h2>Nuestra Historia</h2>
+    <p class="lead">Desde hace más de 15 años, nuestra familia se ha dedicado al arte de la manufactura artesanal.</p>
+    <div class="history-cards">
+      <div class="history-card">Cada pieza es única</div>
+      <div class="history-card">Diseño contemporáneo</div>
+      <div class="history-card">Hecho a mano</div>
+      <div class="history-card">500+ reseñas</div>
+    </div>
+  </section>
+  
+<ion-footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="brand">
+        <img src="assets/icon/logo pestaña.png" alt="logo" />
+        <div>
+          <div class="brand-name">Arte y Diseño</div>
+          <div class="brand-desc">Creaciones artesanales desde 2008</div>
+        </div>
+      </div>
+      <div class="socials">© 2026 Arte y Diseño</div>
+    </div>
+    <div class="footer-col">
+      <h4>Enlaces</h4>
+      <a routerLink="/home">Inicio</a>
+      <a routerLink="/product-list">Colección</a>
+    </div>
+    <div class="footer-col" id="contacto">
+      <h4>Contacto</h4>
+      <div>correo@arteydiseno.com</div>
+      <div>+34 600 000 000</div>
+    </div>
+  </div>
+</ion-footer>
+</ion-content>
+
+<!-- Product Preview Modal -->
+<div class="preview-overlay" *ngIf="showPreview" (click)="closePreview()">
+  <div class="preview-modal" (click)="$event.stopPropagation()" *ngIf="selectedProduct">
+    <div class="preview-header">
+      <h2>{{ selectedProduct.name }}</h2>
+      <button class="close-btn" (click)="closePreview()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </div>
+    <div class="preview-content">
+      <div class="preview-image">
+        <ion-img [src]="selectedProduct.image" [alt]="selectedProduct.name"></ion-img>
+      </div>
+      <div class="preview-info">
+        <div class="rating">
+          <span class="stars">⭐ {{ selectedProduct.rating }}</span>
+        </div>
+        <div class="price">
+          <span class="current">${{ selectedProduct.price | number: '1.2-2' }}</span>
+          <span class="original">${{ selectedProduct.originalPrice | number: '1.2-2' }}</span>
+        </div>
+        <p class="description">{{ selectedProduct.description }}</p>
+        <div class="preview-actions">
+          <ion-button color="dark" expand="block" (click)="goToProduct(selectedProduct.id)">
+            <ion-icon name="arrow-forward" slot="start"></ion-icon>
+            Ver detalles completos
+          </ion-button>
+          <ion-button color="success" expand="block" routerLink="/cart">
+            <ion-icon name="cart" slot="start"></ion-icon>
+            Ir al carrito
+          </ion-button>
+          <ion-button fill="outline" expand="block" (click)="closePreview()">
+            Cerrar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="assets/icon/Logo.png" alt="logo" />
+        <span>Arte y Diseño</span>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="register-page">
+  <section class="register-hero">
+    <h2>Regístrate</h2>
+    <p class="subtitle">Únete y descubre piezas únicas hechas a mano</p>
+  </section>
+
+  <section class="register-form">
+    <!-- Mensaje de éxito -->
+    <div class="alert alert-success" *ngIf="success">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <span>¡Registro exitoso! Redirigiendo...</span>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="alert alert-error" *ngIf="error">
+      <ion-icon name="alert-circle"></ion-icon>
+      <span>{{ error }}</span>
+    </div>
+
+    <!-- Nombre completo -->
+    <div class="form-group">
+      <label>Nombre completo:</label>
+      <ion-input 
+        [(ngModel)]="name" 
+        placeholder="Tu nombre completo" 
+        class="input"
+        [disabled]="loading">
+      </ion-input>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label>Correo electrónico:</label>
+      <ion-input 
+        [(ngModel)]="email" 
+        type="email" 
+        placeholder="tu@email.com" 
+        class="input"
+        [disabled]="loading">
+      </ion-input>
+    </div>
+
+    <!-- Contraseña -->
+    <div class="form-group">
+      <label>Contraseña:</label>
+      <ion-input 
+        [(ngModel)]="password" 
+        type="password" 
+        placeholder="Mínimo 6 caracteres" 
+        class="input"
+        [disabled]="loading">
+      </ion-input>
+    </div>
+
+    <!-- Confirmar Contraseña -->
+    <div class="form-group">
+      <label>Confirmar contraseña:</label>
+      <ion-input 
+        [(ngModel)]="confirmPassword" 
+        type="password" 
+        placeholder="Repite tu contraseña" 
+        class="input"
+        [disabled]="loading">
+      </ion-input>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="actions">
+      <ion-button 
+        (click)="submit()" 
+        class="btn-primary"
+        [disabled]="loading || !name || !email || !password || !confirmPassword">
+        <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+        {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
+      </ion-button>
+    </div>
+
+    <!-- Enlace a login -->
+    <div class="form-footer">
+      <p>¿Ya tienes cuenta? <a (click)="goToLogin()" class="link">Inicia sesión aquí</a></p>
+    </div>
+  </section>
+</ion-content>

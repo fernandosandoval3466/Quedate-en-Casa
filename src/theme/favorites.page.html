@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mis Favoritos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="clearAll()" color="danger" *ngIf="favorites.length > 0">
+        Vaciar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="favorites-content">
+  <div class="favorites-container">
+    <!-- Estado vacío -->
+    <div class="empty-state" *ngIf="favorites.length === 0">
+      <ion-icon name="heart-outline"></ion-icon>
+      <h3>No tienes favoritos aún</h3>
+      <p>Explora nuestra colección y guarda las piezas que más te gusten.</p>
+      <ion-button color="dark" routerLink="/home">Explorar tienda</ion-button>
+    </div>
+
+    <!-- Cuadrícula de favoritos -->
+    <div class="favorites-grid" *ngIf="favorites.length > 0">
+      <div class="favorite-card" *ngFor="let item of favorites">
+        <div class="card-media">
+          <img [src]="item.image" [alt]="item.name" />
+          <button class="remove-btn" (click)="removeFromFavorites(item.id)" title="Quitar de favoritos">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="info">
+            <span class="title">{{ item.name }}</span>
+            <span class="price">${{ item.price | number: '1.2-2' }}</span>
+          </div>
+          <div class="actions">
+            <ion-button fill="outline" size="small" [routerLink]="['/product', item.id]">Ver detalles</ion-button>
+            <ion-button color="dark" size="small">Comprar</ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,184 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <img src="assets/icon/Logo.png" alt="logo" />
+        <span>Arte y Diseño</span>
+      </div>
+      <nav class="nav">
+        <a routerLink="/home">Inicio</a>
+        <a routerLink="/home#coleccion">Colección</a>
+        <a routerLink="/home#historia">Historia</a>
+        <a routerLink="/home#contacto">Contacto</a>
+      </nav>
+      <div class="actions">
+        <ion-icon name="search-outline"></ion-icon>
+        <ion-button fill="clear" size="small" routerLink="/cart" class="cart-btn">
+          <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+        <ion-button fill="outline" size="small" class="login-btn" routerLink="/login">Iniciar sesión</ion-button>
+        <ion-button color="primary" size="small" class="register-btn" routerLink="/register">Registrarse</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="product-content">
+  <div class="product-container">
+    <!-- Back Button -->
+    <div class="back-btn-container">
+      <ion-button fill="clear" size="small" (click)="goBack()">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Volver
+      </ion-button>
+    </div>
+
+    <!-- Product Section -->
+    <section class="product-section">
+      <div class="product-image">
+        <ion-img [src]="product.image" [alt]="product.name"></ion-img>
+        <div class="badge">-30%</div>
+      </div>
+
+      <div class="product-info">
+        <h1>{{ product.name }}</h1>
+        
+        <!-- Rating -->
+        <div class="rating">
+          <div class="stars">⭐ {{ product.rating }}</div>
+          <div class="reviews">({{ product.reviews }} reseñas)</div>
+        </div>
+
+        <!-- Price -->
+        <div class="price-section">
+          <div class="price">{{ product.price | currency }}</div>
+          <div class="original-price">{{ product.originalPrice | currency }}</div>
+        </div>
+
+        <!-- Description -->
+        <p class="description">{{ product.description }}</p>
+
+        <!-- Features -->
+        <div class="features">
+          <h3>Características</h3>
+          <ul>
+            <li *ngFor="let feature of product.features">✓ {{ feature }}</li>
+          </ul>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="quantity-section">
+          <label>Cantidad disponible: {{ product.stock }}</label>
+          <div class="quantity-control">
+            <ion-button fill="outline" size="small" (click)="decreaseQuantity()">
+              <ion-icon name="remove" slot="icon-only"></ion-icon>
+            </ion-button>
+            <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stock" readonly class="qty-display">
+            <ion-button fill="outline" size="small" (click)="increaseQuantity()">
+              <ion-icon name="add" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <!-- Add to Cart Button -->
+        <div class="action-buttons">
+          <ion-button color="primary" expand="block" (click)="addToCart()">
+            <ion-icon name="cart" slot="start"></ion-icon>
+            Agregar al carrito
+          </ion-button>
+          <ion-button fill="outline" expand="block">
+            <ion-icon name="heart" slot="start"></ion-icon>
+            Agregar a favoritos
+          </ion-button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Details Section -->
+    <section class="details-section">
+      <h2>Detalles del Producto</h2>
+      <div class="details-grid">
+        <div class="detail-item">
+          <span class="label">Material:</span>
+          <span class="value">{{ product.details.material }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Dimensiones:</span>
+          <span class="value">{{ product.details.dimensions }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Peso:</span>
+          <span class="value">{{ product.details.weight }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Color:</span>
+          <span class="value">{{ product.details.color }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Artesano:</span>
+          <span class="value">{{ product.details.artisan }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Fecha de creación:</span>
+          <span class="value">{{ product.details.createdDate }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+      <h2>Reseñas de Clientes</h2>
+      <div class="review-stats">
+        <div class="stat">
+          <div class="rating-number">{{ product.rating }}</div>
+          <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+          <div class="rating-count">Basado en {{ product.reviews }} reseñas</div>
+        </div>
+      </div>
+      <div class="reviews-list">
+        <div class="review-item">
+          <div class="reviewer">María García</div>
+          <div class="review-rating">⭐⭐⭐⭐⭐</div>
+          <div class="review-text">Producto excelente, superó mis expectativas. Muy bien empacado y llegó rápido.</div>
+        </div>
+        <div class="review-item">
+          <div class="reviewer">Carlos López</div>
+          <div class="review-rating">⭐⭐⭐⭐</div>
+          <div class="review-text">Muy bonito, aunque los detalles son más pequeños de lo que esperaba.</div>
+        </div>
+        <div class="review-item">
+          <div class="reviewer">Ana Rodríguez</div>
+          <div class="review-rating">⭐⭐⭐⭐⭐</div>
+          <div class="review-text">Perfecto para regalo. La calidad es impecable y el empaque es hermoso.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <ion-footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col">
+        <div class="brand">
+          <img src="assets/icon/Logo.png" alt="logo" />
+          <div>
+            <div class="brand-name">Arte y Diseño</div>
+            <div class="brand-desc">Creaciones artesanales desde 2008</div>
+          </div>
+        </div>
+        <div class="socials">© 2026 Arte y Diseño</div>
+      </div>
+      <div class="footer-col">
+        <h4>Enlaces</h4>
+        <a>Inicio</a>
+        <a>Colección</a>
+        <a>Contacto</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <div>correo@arteydiseno.com</div>
+        <div>+34 600 000 000</div>
+      </div>
+    </div>
+  </ion-footer>
+</ion-content>

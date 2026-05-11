@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+backend/node_modules/
+
+# Compilación
+dist/
+www/
+.sourcemaps/
+
+# Variables de entorno (Seguridad)
+.env
+backend/.env
+
+# IDEs y Sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Ionic/Angular temp
+.angular/
+.pnpm-debug.log
+package-lock.json
