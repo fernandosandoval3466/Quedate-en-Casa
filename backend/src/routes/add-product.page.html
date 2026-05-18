@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/product-list"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nuevo Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <h2>Detalles del Producto</h2>
+    
+    <div class="input-group">
+      <label>Nombre del Producto</label>
+      <input type="text" [(ngModel)]="newProduct.Nombre" placeholder="Ej: Jarrón de Cerámica" class="custom-input">
+    </div>
+
+    <div class="input-group">
+      <label>Descripción</label>
+      <textarea [(ngModel)]="newProduct.Descripcion" placeholder="Describe la artesanía..." class="custom-input"></textarea>
+    </div>
+
+    <div class="row">
+      <div class="input-group">
+        <label>Precio Venta</label>
+        <input type="number" [(ngModel)]="newProduct.Precio" class="custom-input">
+      </div>
+      <div class="input-group">
+        <label>Precio Original (Opcional)</label>
+        <input type="number" [(ngModel)]="newProduct.Precio_Original" class="custom-input">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-group">
+        <label>Stock Inicial</label>
+        <input type="number" [(ngModel)]="newProduct.Stock" class="custom-input">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>URL de la Imagen</label>
+      <input type="text" [(ngModel)]="newProduct.Imagen_Url" placeholder="https://..." class="custom-input">
+    </div>
+
+    <div class="preview-card" *ngIf="newProduct.Imagen_Url">
+      <p>Vista previa:</p>
+      <img [src]="newProduct.Imagen_Url" style="max-height: 150px; border-radius: 8px;">
+    </div>
+
+    <ion-button expand="block" color="dark" (click)="saveProduct()" style="margin-top: 20px;">
+      <ion-icon name="save-outline" slot="start"></ion-icon>
+      Guardar Producto
+    </ion-button>
+  </div>
+</ion-content>

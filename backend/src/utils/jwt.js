@@ -1,19 +1,18 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = (userId, email) => {
-  return jwt.sign(
-    { userId, email },
-    process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
-  );
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  console.error('❌ CRÍTICO: La variable JWT_SECRET no está definida en el archivo .env');
+  process.exit(1); // Termina la aplicación si no hay secreto JWT
+}
+
+const generateToken = (userId, email, role = 'cliente') => {
+  return jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '1h' });
 };
 
 const verifyToken = (token) => {
-  try {
-    return jwt.verify(token, process.env.JWT_SECRET);
-  } catch (error) {
-    throw new Error('Invalid token');
-  }
+  return jwt.verify(token, JWT_SECRET);
 };
 
 module.exports = { generateToken, verifyToken };

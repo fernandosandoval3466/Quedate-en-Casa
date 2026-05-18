@@ -16,13 +16,17 @@ app.use((req, res, next) => {
 });
 
 // Routes
-const authRoutes = require('./routes/auth');
-const productsRoutes = require('./routes/products');
-const cartRoutes = require('./routes/cart');
+const authRoutes = require('./routes/authRoutes');
+const productsRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const reviewRoutes = require('./routes/reviewRoutes'); // Asegúrate de que esta línea ya esté
+const adminProductRoutes = require('./routes/adminProductRoutes'); // Nueva línea
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/reviews', reviewRoutes); // Asegúrate de que esta línea ya esté
+app.use('/api/admin/products', adminProductRoutes); // Nueva línea
 
 // Health check
 app.get('/api/health', (req, res) => {

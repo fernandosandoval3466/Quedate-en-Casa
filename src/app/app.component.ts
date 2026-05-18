@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from './services/auth.service';
 import { 
   IonApp, 
   IonRouterOutlet, 
@@ -40,11 +41,15 @@ import { moon, sunny, cart, person, settings, logOut, heart } from 'ionicons/ico
     IonMenuToggle,
     IonButtons,
     IonMenuButton,
-    RouterLink
+    RouterLink,
   ],
 })
 export class AppComponent implements OnInit {
   public isDark = false;
+  public isAuthenticated = false;
+
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   constructor(private titleService: Title) {
     // Registramos los iconos que vamos a usar
@@ -54,6 +59,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Nos suscribimos al estado de autenticación para que la UI reaccione al login/logout
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
+    });
+
     /* Comentado temporalmente el modo oscuro
     // 1. Detectar la preferencia del sistema
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
@@ -74,5 +84,13 @@ export class AppComponent implements OnInit {
     // Comentado temporalmente
     // this.isDark = isDark;
     // document.body.classList.toggle('dark', isDark);
+  }
+
+  /**
+   * Método para cerrar sesión desde el menú lateral
+   */
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

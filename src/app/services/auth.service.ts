@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject, tap, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -8,64 +10,53 @@ import { delay } from 'rxjs/operators';
 export class AuthService {
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private authState = new BehaviorSubject<boolean>(this.hasToken());
+  private _isAdmin = new BehaviorSubject<boolean>(this.checkAdminStatus());
   
   public token$ = this.tokenSubject.asObservable();
   public isAuthenticated$ = this.authState.asObservable();
+  public isAdmin$ = this._isAdmin.asObservable();
 
-  constructor() {
+  private apiUrl = 'http://localhost:3000/api/auth';
+
+  constructor(private http: HttpClient) {
     const savedToken = this.getStoredToken();
     if (savedToken) this.tokenSubject.next(savedToken);
   }
 
-  // Simulación de persistencia de usuarios locales
-  private getLocalUsers(): any[] {
-    const users = localStorage.getItem('mock_users');
-    return users ? JSON.parse(users) : [];
-  }
-
-  register(name: string, email: string, password: string): Observable<any> {
-    const users = this.getLocalUsers();
-    if (users.find(u => u.email === email)) {
-      return throwError(() => ({ error: { error: 'El correo ya está registrado' } }));
-    }
-
-    const newUser = { id: Date.now(), name, email, password };
-    users.push(newUser);
-    localStorage.setItem('mock_users', JSON.stringify(users));
-    
-    this.setToken('mock-jwt-token-' + newUser.id);
-    return of({ message: 'Usuario registrado con éxito', user: newUser }).pipe(delay(800));
+  register(name: string, email: string, password: string, role: string = 'cliente', adminCode?: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, { name, email, password, role, adminCode }).pipe(
+      tap((res: any) => {
+        this.setToken(res.token);
+        this._isAdmin.next(res.user?.role?.toLowerCase() === 'administrador');
+      })
+    );
   }
 
   login(email: string, password: string): Observable<any> {
-    const users = this.getLocalUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-      this.setToken('mock-jwt-token-' + user.id);
-      return of({ message: 'Login exitoso', user }).pipe(delay(800));
-    } else {
-      return throwError(() => ({ error: { error: 'Credenciales inválidas' } })).pipe(delay(800));
-    }
+    return this.http.post(`${this.apiUrl}/login`, { email, password }).pipe(
+      tap((res: any) => {
+        this.setToken(res.token);
+        this._isAdmin.next(res.user?.role?.toLowerCase() === 'administrador');
+      })
+    );
   }
 
   resetPassword(email: string, newPassword: string): Observable<any> {
-    const users = this.getLocalUsers();
-    const userIndex = users.findIndex(u => u.email === email);
-
-    if (userIndex > -1) {
-      users[userIndex].password = newPassword;
-      localStorage.setItem('mock_users', JSON.stringify(users));
-      return of({ message: 'Contraseña actualizada correctamente' }).pipe(delay(800));
-    } else {
-      return throwError(() => ({ error: { error: 'Usuario no encontrado' } }));
-    }
+    return this.http.post(`${this.apiUrl}/reset-password`, { email, newPassword });
   }
 
   verify(): Observable<any> {
-    return this.hasToken() 
-      ? of({ valid: true }).pipe(delay(500)) 
-      : throwError(() => ({ valid: false }));
+    const token = this.getToken();
+    if (!token) {
+      return throwError(() => ({ valid: false, message: 'No token found' }));
+    }
+    // Llama al backend para verificar el token
+    return this.http.get(`${this.apiUrl}/verify`, { headers: { 'Authorization': `Bearer ${token}` } }).pipe(
+      map((res: any) => ({ valid: res.message === 'Token is valid', userId: res.userId, email: res.email })),
+      catchError(error => {
+        return throwError(() => ({ valid: false, message: error.error?.error || 'Token verification failed' }));
+      })
+    );
   }
 
   setToken(token: string) {
@@ -73,10 +64,26 @@ export class AuthService {
     localStorage.setItem('auth', 'true');
     this.tokenSubject.next(token);
     this.authState.next(true);
+    this._isAdmin.next(this.checkAdminStatus());
   }
 
   getToken(): string | null {
     return this.tokenSubject.value;
+  }
+
+  isAdmin(): boolean {
+    return this._isAdmin.value;
+  }
+
+  private checkAdminStatus(): boolean {
+    const token = this.getStoredToken();
+    if (!token) return false;
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.role?.toLowerCase() === 'administrador';
+    } catch {
+      return false;
+    }
   }
 
   private getStoredToken(): string | null {
@@ -93,6 +100,7 @@ export class AuthService {
     localStorage.removeItem('cart');
     this.tokenSubject.next(null);
     this.authState.next(false);
+    this._isAdmin.next(false);
   }
 
   isAuthenticated(): boolean {

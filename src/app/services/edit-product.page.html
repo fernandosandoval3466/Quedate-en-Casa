@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">Atrás</ion-button>
+    </ion-buttons>
+    <ion-title>Editar Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <div class="input-group">
+      <label>Nombre del Producto</label>
+      <input type="text" [(ngModel)]="product.nombre" class="custom-input">
+    </div>
+
+    <div class="input-group">
+      <label>Descripción</label>
+      <textarea [(ngModel)]="product.descripcion" class="custom-input"></textarea>
+    </div>
+
+    <div class="row">
+      <div class="input-group">
+        <label>Precio ($)</label>
+        <input type="number" [(ngModel)]="product.precio" class="custom-input">
+      </div>
+      <div class="input-group">
+        <label>Stock</label>
+        <input type="number" [(ngModel)]="product.stock" class="custom-input">
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>URL de Imagen</label>
+      <input type="text" [(ngModel)]="product.imagen_url" class="custom-input">
+    </div>
+
+    <ion-button expand="block" color="warning" (click)="updateProduct()">Actualizar Producto</ion-button>
+
+    <ion-button expand="block" color="danger" fill="clear" (click)="confirmDelete()" class="ion-margin-top">
+      Eliminar Producto
+    </ion-button>
+  </div>
+</ion-content>

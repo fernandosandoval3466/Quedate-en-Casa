@@ -39,6 +39,14 @@ export const routes: Routes = [
     loadComponent: () => import('../theme/favorites.page').then(m => m.FavoritesPage),
   },
   {
+    path: 'add-product',
+    loadComponent: () => import('./services/add-product.page').then(m => m.AddProductPage),
+  },
+  {
+    path: 'edit-product/:id',
+    loadComponent: () => import('./services/edit-product.page').then(m => m.EditProductPage),
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',

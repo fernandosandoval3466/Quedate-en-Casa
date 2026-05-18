@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, Observable, map } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private cartSubject = new BehaviorSubject<any[]>(this.loadFromStorage());
+  private apiUrl = 'http://127.0.0.1:3000/api/cart';
+  private cartSubject = new BehaviorSubject<any[]>([]);
   cart$ = this.cartSubject.asObservable();
 
   // Observable para el total de items (para el badge)
@@ -14,69 +16,60 @@ export class CartService {
   // Observable para el precio total
   cartTotal$ = this.cart$.pipe(map(items => items.reduce((acc, item) => acc + (item.price * item.quantity), 0)));
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private http: HttpClient) {
     // Escuchar cambios de autenticación para limpiar el carrito en memoria
     this.authService.isAuthenticated$.subscribe(isAuth => {
       if (!isAuth) {
         this.cartSubject.next([]);
       } else {
-        this.cartSubject.next(this.loadFromStorage());
+        this.loadCartFromServer();
       }
     });
   }
 
-  private loadFromStorage(): any[] {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
+  private getHeaders() {
+    const token = this.authService.getToken();
+    return {
+      headers: new HttpHeaders({
+        'Authorization': `Bearer ${token}`
+      })
+    };
   }
 
-  private saveToStorage(cart: any[]) {
-    localStorage.setItem('cart', JSON.stringify(cart));
+  private loadCartFromServer() {
+    this.http.get<any>(this.apiUrl, this.getHeaders()).subscribe(res => { // res.data ahora contiene los items
+      this.cartSubject.next(res.data);
+    });
   }
 
   getCart(): Observable<any> {
-    const items = this.cartSubject.value;
-    const total = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    return of({ data: items, total: total });
+    return this.http.get<any>(this.apiUrl, this.getHeaders());
   }
 
   addToCart(product: any, quantity: number): Observable<any> {
-    let current = [...this.cartSubject.value];
-    const index = current.findIndex(p => p.id === product.id);
-
-    if (index > -1) {
-      // Clonamos el objeto para asegurar que la referencia cambie y Angular detecte el cambio
-      current[index] = { ...current[index], quantity: current[index].quantity + quantity };
-    } else {
-      current.push({ ...product, quantity });
-    }
-
-    this.cartSubject.next(current);
-    this.saveToStorage(current);
-    return of({ message: 'Producto añadido', data: current });
+    // Aseguramos que tome el ID sin importar si viene como 'id' o 'Id' desde el SQL
+    const productId = product.id || product.Id;
+    return this.http.post<any>(this.apiUrl, { productId, quantity }, this.getHeaders())
+      .pipe(tap(() => this.loadCartFromServer()));
   }
 
   removeFromCart(productId: number): Observable<any> {
-    const current = this.cartSubject.value.filter(p => p.id !== productId);
-    this.cartSubject.next(current);
-    this.saveToStorage(current);
-    return of({ message: 'Producto eliminado', data: current });
+    return this.http.delete<any>(`${this.apiUrl}/${productId}`, this.getHeaders())
+      .pipe(tap(() => this.loadCartFromServer()));
   }
 
+  /**
+   * Actualiza la cantidad de un producto específico en el carrito.
+   * @param productId ID del producto a actualizar.
+   * @param quantity Nueva cantidad del producto.
+   */
   updateCart(productId: number, quantity: number): Observable<any> {
-    const current = [...this.cartSubject.value];
-    const index = current.findIndex(p => p.id === productId);
-    if (index > -1) {
-      current[index].quantity = quantity;
-      this.cartSubject.next(current);
-      this.saveToStorage(current);
-    }
-    return of({ data: current });
+    return this.http.put<any>(`${this.apiUrl}/${productId}`, { quantity }, this.getHeaders())
+      .pipe(tap(() => this.loadCartFromServer()));
   }
 
   clearCart(): Observable<any> {
-    this.cartSubject.next([]);
-    this.saveToStorage([]);
-    return of({ message: 'Carrito vaciado' });
+    return this.http.delete<any>(`${this.apiUrl}/clear`, this.getHeaders())
+      .pipe(tap(() => this.cartSubject.next([]))); // Vaciar el carrito localmente después de la petición
   }
 }

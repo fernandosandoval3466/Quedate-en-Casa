@@ -13,6 +13,7 @@ const authMiddleware = (req, res, next) => {
     const decoded = verifyToken(token);
     req.userId = decoded.userId;
     req.userEmail = decoded.email;
+    req.user = decoded; // Adjuntar el objeto decodificado completo
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });

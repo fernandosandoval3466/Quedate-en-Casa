@@ -75,6 +75,28 @@
       </ion-input>
     </div>
 
+    <!-- Selección de Rol -->
+    <div class="form-group">
+      <label>Tipo de cuenta:</label>
+      <select [(ngModel)]="role" class="input" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; background: #f9f9f9; color: black;">
+        <option value="cliente">Cliente</option>
+        <option value="administrador">Administrador</option>
+      </select>
+    </div>
+
+    <!-- Código de Administrador (Condicional) -->
+    <div class="form-group" *ngIf="role === 'administrador'">
+      <label style="color: #d32f2f;">Código de Seguridad Admin:</label>
+      <ion-input 
+        [(ngModel)]="adminCode" 
+        type="password" 
+        placeholder="Ingresa el código secreto" 
+        class="input"
+        style="--border-color: #d32f2f"
+        [disabled]="loading">
+      </ion-input>
+    </div>
+
     <!-- Botones de acción -->
     <div class="actions">
       <ion-button 

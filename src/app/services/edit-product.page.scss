@@ -1,0 +1,31 @@
+ion-content {
+    --background: #f9f9f9; /* Fondo gris claro para la ventana */
+    --color: #000000;
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+
+    .input-group {
+        margin-bottom: 15px;
+        label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 5px; color: #444; }
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        color: #000000; 
+        background: #ffffff; /* Fondo blanco para los inputs */
+        font-size: 15px;
+        outline: none;
+        &:focus { border-color: #000; }
+    }
+
+    .row {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+}

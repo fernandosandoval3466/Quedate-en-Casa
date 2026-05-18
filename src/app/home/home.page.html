@@ -17,7 +17,7 @@
       <div class="actions">
         <div class="search-bar" style="max-width: 160px; height: 36px; font-size: 14px;">
           <ion-icon name="search-outline"></ion-icon>
-          <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="filterProducts()" style="width: 100%; border: none; outline: none; background: transparent; padding-left: 5px;" />
+          <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (input)="filterProducts()" style="width: 100%; border: none; outline: none; background: transparent; padding-left: 5px; color: black;" />
         </div>
         <ion-button fill="clear" size="small" (click)="toggleDarkMode()" class="theme-btn" [title]="darkMode ? 'Modo claro' : 'Modo oscuro'">
           <ion-icon [name]="darkMode ? 'sunny-outline' : 'moon-outline'" slot="icon-only"></ion-icon>
@@ -44,8 +44,6 @@
       <h1>Arte y Diseño</h1>
       <p class="lead">Creaciones artesanales únicas hechas con pasión y tradición.</p>
       <div class="hero-controls">
-        <ion-button color="dark" routerLink="/product/1">Comprar ahora</ion-button>
-        <ion-button fill="outline" [routerLink]="['/home']" fragment="coleccion">Ver colección</ion-button>
       </div>
       <div class="hero-stats">
         <div><strong>500+</strong><span>Productos</span></div>
@@ -65,7 +63,7 @@
     <h2>Nuestra Colección</h2>
     <p class="subtitle">Piezas seleccionadas de nuestra tienda</p>
     <div class="products-grid">
-      <div class="product" *ngFor="let item of filteredProducts">
+      <div class="product" *ngFor="let item of filteredProducts.slice(0, 3)">
         <div class="product-media">
           <ion-img [src]="item.image"></ion-img>
           <button class="like" (click)="toggleLike(item)">
@@ -117,8 +115,8 @@
     </div>
     <div class="footer-col" id="contacto">
       <h4>Contacto</h4>
-      <div>correo@arteydiseno.com</div>
-      <div>+34 600 000 000</div>
+      <!--<div>correo@arteydiseno.com</div>-->
+      <div>+57 310 814 8585</div>
     </div>
   </div>
 </ion-footer>

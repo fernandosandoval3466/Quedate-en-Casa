@@ -15,6 +15,7 @@ import {
   moonOutline, 
   cartOutline 
 } from 'ionicons/icons';
+import { ProductService } from '../services/product.service';
 import { ThemeService } from '../services/theme.service';
 import { FavoritesService } from '../services/favorites.service';
 import { AuthService } from '../services/auth.service';
@@ -35,12 +36,8 @@ export class HomePage implements OnInit {
   searchTerm = '';
   cartCount = 0;
 
-  products = [
-    { id: 1, name: 'Producto Artesanal Premium', price: 89.99, originalPrice: 129.99, rating: 4.8, image: 'assets/product1.svg', description: 'Pieza única hecha a mano con materiales de la más alta calidad.', liked: false },
-    { id: 2, name: 'Cerámica Hecha a Mano', price: 65.00, originalPrice: 99.99, rating: 4.6, image: 'assets/product2.svg', description: 'Cerámica tradicional elaborada por maestros artesanos.', liked: false },
-    { id: 3, name: 'Tejido Tradicional', price: 55.00, originalPrice: 85.00, rating: 4.9, image: 'assets/product3.svg', description: 'Tejidos con técnicas ancestrales de nuestros artesanos.', liked: false },
-  ];
-  filteredProducts = [...this.products];
+  products: any[] = [];
+  filteredProducts: any[] = [];
 
   constructor(
     private router: Router,
@@ -49,7 +46,8 @@ export class HomePage implements OnInit {
     private toastController: ToastController,
     private favoritesService: FavoritesService,
     public authService: AuthService,
-    private cartService: CartService
+    private cartService: CartService,
+    private productService: ProductService
   ) {
     addIcons({ 
       close, 
@@ -65,17 +63,44 @@ export class HomePage implements OnInit {
   }
 
   ngOnInit() {
+    this.loadInitialData();
+  }
+
+  ionViewWillEnter() {
+    // Asegurar que el estado de autenticación y datos se refresquen al volver a la página
+    this.loadInitialData();
+  }
+
+  private loadInitialData() {
     this.darkMode = this.themeService.isDarkMode();
     this.themeService.darkMode$.subscribe(isDark => {
       this.darkMode = isDark;
     });
 
-    // Sincronizar el estado de "liked" con el servicio de favoritos
-    this.favoritesService.favorites$.subscribe(favs => {
-      this.products.forEach(p => {
-        p.liked = favs.some(f => f.id === p.id);
-      });
-      this.filterProducts();
+    // Cargar productos y luego sincronizar favoritos
+    this.productService.getAllProducts().subscribe({
+      next: (res) => {
+        const rawData = Array.isArray(res) ? res : (res?.data && Array.isArray(res.data) ? res.data : []);
+        this.products = rawData.map((p: any) => ({
+          id: p.Id ?? p.id,
+          name: p.Nombre ?? p.name,
+          price: p.Precio ?? p.price,
+          image: p.Imagen_Url ?? p.image ?? 'assets/icon/Logo.png',
+          description: p.Descripcion ?? p.description,
+          rating: p.Rating ?? p.rating,
+          originalPrice: p.Precio_Original ?? p.originalPrice,
+          liked: false
+        }));
+        
+        // Sincronizar con favoritos inmediatamente después de cargar
+        const currentFavs = this.favoritesService.getCurrentFavorites();
+        this.products.forEach((p: any) => {
+          p.liked = currentFavs.some((f: any) => f.id === p.id);
+        });
+
+        this.filterProducts();
+      },
+      error: (err) => console.error('Error cargando productos:', err)
     });
 
     // Suscribirse al conteo del carrito
@@ -89,8 +114,9 @@ export class HomePage implements OnInit {
   }
 
   filterProducts() {
+    if (!this.products) return;
     this.filteredProducts = this.products.filter(p => 
-      p.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      p.name?.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 

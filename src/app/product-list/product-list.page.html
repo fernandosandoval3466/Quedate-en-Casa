@@ -16,8 +16,13 @@
         <ion-button fill="clear" size="small" routerLink="/cart" class="cart-btn">
           <ion-icon name="cart-outline" slot="icon-only"></ion-icon>
         </ion-button>
-        <ion-button fill="outline" size="small" class="login-btn" routerLink="/login">Iniciar sesión</ion-button>
-        <ion-button color="primary" size="small" class="register-btn" routerLink="/register">Registrarse</ion-button>
+        <ng-container *ngIf="!isLoggedIn">
+          <ion-button fill="outline" size="small" class="login-btn" routerLink="/login">Iniciar sesión</ion-button>
+          <ion-button color="primary" size="small" class="register-btn" routerLink="/register">Registrarse</ion-button>
+        </ng-container>
+        <ion-button *ngIf="isLoggedIn" fill="clear" size="small" (click)="logout()">
+          <ion-icon name="log-out-outline" slot="icon-only"></ion-icon>
+        </ion-button>
       </div>
     </div>
   </ion-toolbar>
@@ -37,6 +42,14 @@
     <div class="catalog-header">
       <h1>Catálogo de Productos</h1>
       <p>Explora nuestra selección completa de creaciones artesanales</p>
+    </div>
+
+    <!-- Admin Actions -->
+    <div class="admin-actions" *ngIf="isAdmin" style="padding: 10px 0; text-align: right;">
+      <ion-button color="success" (click)="goToAddProduct()">
+        <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+        Nuevo Producto (Admin)
+      </ion-button>
     </div>
 
     <!-- Filters and Sort -->
@@ -64,24 +77,28 @@
     </div>
 
     <!-- Products Grid -->
-    <div class="products-grid">
-      <div class="product-card" *ngFor="let product of filteredProducts" [routerLink]="['/product', product.id]">
-        <div class="product-image">
-          <ion-img [src]="product.image" [alt]="product.name"></ion-img>
-          <div class="product-badge">-30%</div>
+    <div class="products-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; padding: 20px 0;">
+      <div class="product-card" *ngFor="let product of filteredProducts" [routerLink]="['/product', product.id]" style="width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,0.08);">
+        <div class="product-image" style="height: 320px; width: 100%; position: relative;">
+          <ion-img [src]="product.image" [alt]="product.name" style="height: 100%; width: 100%; object-fit: cover;"></ion-img>
+          <div class="product-badge" style="position: absolute; top: 15px; left: 15px;">-30%</div>
         </div>
-        <div class="product-info">
-          <h3>{{ product.name }}</h3>
+        <div class="product-info" style="padding: 20px;">
+          <h3 style="margin: 0; font-size: 1.2rem; font-weight: 600;">{{ product.name }}</h3>
           <div class="rating">
             <span class="stars">⭐ {{ product.rating }}</span>
           </div>
-          <div class="price">
-            <span class="current">{{ product.price | currency }}</span>
-            <span class="original">{{ product.originalPrice | currency }}</span>
+          <div class="price" style="margin: 12px 0; display: flex; align-items: center; gap: 10px;">
+            <span class="current" style="font-size: 1.3rem; font-weight: bold;">{{ product.price | currency }}</span>
+            <span class="original" style="text-decoration: line-through; font-size: 1rem;">{{ product.originalPrice | currency }}</span>
           </div>
-          <ion-button color="primary" expand="block" size="small" class="add-btn">
+          <ion-button color="dark" expand="block" size="small" class="add-btn" style="--border-radius: 8px; font-weight: 500; margin-top: 10px;">
             <ion-icon name="cart" slot="start"></ion-icon>
             Comprar
+          </ion-button>
+          <ion-button *ngIf="isAdmin" color="warning" expand="block" size="small" (click)="goToEditProduct(product.id, $event)" style="margin-top: 8px;">
+            <ion-icon name="create-outline" slot="start"></ion-icon>
+            Editar
           </ion-button>
         </div>
       </div>

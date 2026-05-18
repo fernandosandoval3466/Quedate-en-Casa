@@ -1,6 +1,6 @@
 /* Register page styles — consistent with main design */
 .register-page { font-family: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial; }
-.register-hero { background: linear-gradient(180deg,#fff0f4 0%, #f9eef4 100%); padding:28px 16px; text-align:center; color: #111;}
+.register-hero { background: #f8f9fa; padding:28px 16px; text-align:center; color: #111;}
 .register-hero h2 { margin:8px 0; font-size:22px; }
 .register-hero .subtitle { color:#6b6b6b; font-size:13px; }
 
@@ -54,7 +54,7 @@
 }
 
 .form-group ion-input {
-  --background: var(--input-bg, #e8f5f0);
+  --background: #f4f4f4;
   --padding-start: 14px;
   --padding-end: 14px;
   --color: var(--text-primary, #1f1f1f);
@@ -74,7 +74,7 @@
 }
 
 .btn-primary {
-  --background: #f3d6a6;
+  --background: #111;
   color: #1f1f1f;
   border-radius: 12px;
   padding: 12px 32px;
@@ -101,7 +101,7 @@
 }
 
 .form-footer .link {
-  color: #f3d6a6;
+  color: #111;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;

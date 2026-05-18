@@ -18,6 +18,8 @@ export class RegisterPage {
   email = '';
   password = '';
   confirmPassword = '';
+  role = 'cliente';
+  adminCode = '';
   loading = false;
   error = '';
   success = false;
@@ -47,7 +49,7 @@ export class RegisterPage {
     this.loading = true;
     this.error = '';
 
-    this.authService.register(this.name, this.email, this.password).subscribe(
+    this.authService.register(this.name, this.email, this.password, this.role, this.adminCode).subscribe(
       (response) => {
         this.success = true;
         this.loading = false;
