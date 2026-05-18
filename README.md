@@ -5,7 +5,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-**Arte y Diseño** es una solución PWA (Progressive Web App) y móvil dedicada a la comercialización de piezas artesanales exclusivas. El proyecto implementa patrones de diseño modernos y una arquitectura reactiva para garantizar una navegación fluida.
+**Arte y Diseño** es una solución PWA (Progressive Web App) y móvil dedicada a la comercialización y clases de manualidades. El proyecto implementa patrones de diseño modernos y una arquitectura reactiva para garantizar una navegación fluida.
 
 ## 🚀 Características Principales
 
@@ -63,5 +63,3 @@ El proyecto sigue una separación clara de responsabilidades:
 ## 🎨 Diseño Visual
 El proyecto utiliza una paleta de colores minimalista con tipografía *Inter*, enfocándose en resaltar las imágenes de los productos artesanales. La sección "Hero" utiliza el imagotipo de la marca para reforzar la identidad visual.
 
----
-Desarrollado con ❤️ por tu nombre.
