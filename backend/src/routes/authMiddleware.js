@@ -9,8 +9,15 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    // Seteamos estos valores para que coincidan con la firma generada en utils/jwt.js
-    req.userId = decoded.userId || decoded.id;
+    // Aseguramos que el ID sea un número entero para evitar errores EPARAM en SQL Server
+    const rawId = decoded.userId || decoded.id || decoded.sub;
+    
+    if (!rawId) return res.status(401).json({ error: 'Token no contiene identificación de usuario' });
+
+    const parsedId = parseInt(rawId, 10);
+    if (isNaN(parsedId)) return res.status(400).json({ error: 'Identificador de usuario inválido en el token' });
+    
+    req.userId = parsedId;
     req.userEmail = decoded.email;
     next();
   } catch (err) {

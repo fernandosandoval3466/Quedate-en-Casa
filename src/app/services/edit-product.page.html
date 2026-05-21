@@ -9,25 +9,31 @@
 
 <ion-content class="ion-padding">
   <div class="form-container">
+    <p class="error-msg" *ngIf="submitted && (!product.nombre || !product.descripcion)">* Por favor complete los campos obligatorios</p>
     <div class="input-group">
       <label>Nombre del Producto</label>
-      <input type="text" [(ngModel)]="product.nombre" class="custom-input">
+      <input type="text" [(ngModel)]="product.nombre" class="custom-input" [class.invalid]="submitted && !product.nombre">
     </div>
 
     <div class="input-group">
       <label>Descripción</label>
-      <textarea [(ngModel)]="product.descripcion" class="custom-input"></textarea>
+      <textarea [(ngModel)]="product.descripcion" class="custom-input" [class.invalid]="submitted && !product.descripcion"></textarea>
     </div>
 
     <div class="row">
       <div class="input-group">
         <label>Precio ($)</label>
-        <input type="number" [(ngModel)]="product.precio" class="custom-input">
+        <input type="number" [(ngModel)]="product.precio" class="custom-input" [class.invalid]="submitted && !product.precio">
       </div>
       <div class="input-group">
         <label>Stock</label>
-        <input type="number" [(ngModel)]="product.stock" class="custom-input">
+        <input type="number" [(ngModel)]="product.stock" class="custom-input" [class.invalid]="submitted && product.stock === null">
       </div>
+    </div>
+
+    <div class="input-group">
+      <label>Categoría</label>
+      <input type="text" [(ngModel)]="product.categoria" class="custom-input" placeholder="Ej: Cerámica, Tejido, etc.">
     </div>
 
     <div class="input-group">

@@ -21,6 +21,7 @@ CREATE TABLE [dbo].[Productos] (
     [Imagen_Url]      VARCHAR (255)   NULL,
     [Descripcion]     TEXT            NULL,
     [Stock]           INT             DEFAULT (0) NOT NULL,
+    [Categoria]       VARCHAR (100)   DEFAULT ('General') NULL,
     [Artisan]         VARCHAR (255)   NULL,
     [Created_at]      DATETIME        DEFAULT (GETDATE()) NOT NULL,
     CONSTRAINT [PK_Productos] PRIMARY KEY CLUSTERED ([Id] ASC)

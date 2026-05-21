@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { ProductService } from '../services/product.service';
 import { addIcons } from 'ionicons';
 import { arrowBack, searchOutline, cartOutline, logOutOutline, addCircleOutline, createOutline, cart } from 'ionicons/icons';
 
@@ -18,6 +19,7 @@ import { arrowBack, searchOutline, cartOutline, logOutOutline, addCircleOutline,
 export class ProductListPage implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private productService = inject(ProductService);
 
   public isLoggedIn = false;
   public isAdmin = false; // Nueva propiedad
@@ -26,15 +28,7 @@ export class ProductListPage implements OnInit {
     addIcons({ arrowBack, searchOutline, cartOutline, logOutOutline, addCircleOutline, createOutline, cart });
   }
 
-  products = [
-    { id: 1, name: '1. Producto Artesanal Premium', price: 89.99, originalPrice: 129.99, rating: 4.8, image: 'assets/product1.svg' },
-    { id: 2, name: '2. Cerámica Hecha a Mano', price: 65.00, originalPrice: 99.99, rating: 4.6, image: 'assets/product2.svg' },
-    { id: 3, name: '3. Tejido Tradicional', price: 55.00, originalPrice: 85.00, rating: 4.9, image: 'assets/product3.svg' },
-    { id: 4, name: '4. Pieza de Arte Única', price: 120.00, originalPrice: 180.00, rating: 5.0, image: 'assets/product4.svg' },
-    { id: 5, name: '5. Diseño Contemporáneo', price: 75.00, originalPrice: 110.00, rating: 4.7, image: 'assets/product5.svg' },
-    { id: 6, name: '6. Escultura Artesanal', price: 95.00, originalPrice: 150.00, rating: 4.8, image: 'assets/product6.svg' },
-  ];
-
+  products: any[] = [];
   filteredProducts: any[] = [];
   selectedCategory = 'all';
   sortBy = 'relevancia';
@@ -53,11 +47,37 @@ export class ProductListPage implements OnInit {
       this.isAdmin = status;
     });
 
-    this.filterProducts();
+    this.loadProducts();
+  }
+
+  loadProducts() {
+    this.productService.getAllProducts().subscribe({
+      next: (res) => {
+        const data = Array.isArray(res) ? res : (res.data || []);
+        // Mapeamos los campos de la BD a los campos de tu interfaz
+        this.products = data.map((p: any) => ({
+          id: p.Id,
+          name: p.Nombre,
+          price: p.Precio,
+          originalPrice: p.Precio_Original || p.Precio,
+          rating: p.Rating || 5.0,
+          image: p.Imagen_Url || 'assets/icon/Logo.png',
+          category: p.Categoria || 'General'
+        }));
+        this.filterProducts();
+      },
+      error: (err) => console.error('Error al cargar productos:', err)
+    });
   }
 
   filterProducts() {
-    this.filteredProducts = this.products;
+    if (this.selectedCategory === 'all') {
+      this.filteredProducts = [...this.products];
+    } else {
+      this.filteredProducts = this.products.filter(p => 
+        p.category?.toLowerCase() === this.selectedCategory.toLowerCase()
+      );
+    }
     this.sortProducts();
   }
 

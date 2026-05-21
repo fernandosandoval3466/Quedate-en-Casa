@@ -11,8 +11,8 @@
       <nav class="nav">
         <a routerLink="/home">Inicio</a>
         <a routerLink="/product-list">Colección</a>
-        <a [routerLink]="['/home']" fragment="historia">Historia</a>
-        <a [routerLink]="['/home']" fragment="contacto">Contacto</a>
+        <a routerLink="/home" fragment="historia">Historia</a>
+        <a routerLink="/home" fragment="contacto">Contacto</a>
       </nav>
       <div class="actions">
         <div class="search-bar" style="max-width: 160px; height: 36px; font-size: 14px;">
@@ -44,6 +44,7 @@
       <h1>Arte y Diseño</h1>
       <p class="lead">Creaciones artesanales únicas hechas con pasión y tradición.</p>
       <div class="hero-controls">
+        <ion-button fill="outline" routerLink="/home" fragment="coleccion">Ver colección</ion-button>
       </div>
       <div class="hero-stats">
         <div><strong>500+</strong><span>Productos</span></div>

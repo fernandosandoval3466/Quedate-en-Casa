@@ -16,6 +16,7 @@ import { ProductService } from './product.service';
 export class EditProductPage implements OnInit {
   productId!: number;
   product: any = {};
+  submitted = false;
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -40,20 +41,38 @@ export class EditProductPage implements OnInit {
           nombre: data.Nombre,
           descripcion: data.Descripcion,
           precio: data.Precio,
+          precio_original: data.Precio_Original,
           stock: data.Stock,
-          imagen_url: data.Imagen_Url
+          imagen_url: data.Imagen_Url,
+          categoria: data.Categoria || 'General'
         };
       }
     });
   }
 
   async updateProduct() {
+    this.submitted = true;
+
+    // Validación de campos vacíos
+    if (!this.product.nombre?.trim() || !this.product.descripcion?.trim() || 
+        this.product.precio == null || this.product.stock == null || 
+        !this.product.imagen_url?.trim()) {
+      const t = await this.toast.create({ 
+        message: 'Por favor, complete todos los campos obligatorios', 
+        duration: 3000, 
+        color: 'warning' 
+      });
+      t.present();
+      return;
+    }
+
     this.adminService.updateProduct(this.productId, this.product).subscribe({
       next: async () => {
         const t = await this.toast.create({ message: 'Producto actualizado!', duration: 2000, color: 'success' });
         t.present();
         this.router.navigate(['/product-list']);
-      }
+      },
+      error: (err) => console.error('Error al actualizar:', err)
     });
   }
 

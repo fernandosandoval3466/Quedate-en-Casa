@@ -22,7 +22,10 @@ ion-content {
         font-size: 15px;
         outline: none;
         &:focus { border-color: #000; }
+        &.invalid { border-color: #dc3545; background-color: #fff8f8; }
     }
+
+    .error-msg { color: #dc3545; font-size: 12px; margin-bottom: 10px; font-weight: 600; }
 
     .row {
         display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
